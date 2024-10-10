@@ -1,21 +1,28 @@
 package com.pvh.gym_management.controllers;
 
 import com.pvh.gym_management.dtos.*;
-import com.pvh.gym_management.pojo.PTDetail;
+import com.pvh.gym_management.mappers.UserDTOMapper;
 import com.pvh.gym_management.pojo.User;
 import com.pvh.gym_management.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    private UserDTOMapper userDTOMapper;
 
     @Autowired
     public UserController(UserService userService) {
@@ -120,4 +127,23 @@ public class UserController {
         List<PTInfoDTO> ptList = userService.getAllPTDetails();
         return ResponseEntity.ok(ptList);
     }
+
+    @GetMapping("/pt/available")
+    public ResponseEntity<?> getAvailableUsersWithoutWorkSchedule(
+            @RequestParam("workDay") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate workDay,
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
+
+        List<User> users = userService.getAvailableUsersWithoutWorkSchedule(workDay, startTime, endTime);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có PT nào khả dụng trong khoảng thời gian này.");
+        }
+
+        List<UserDTO> userDTOs = users.stream()
+                .map(userDTOMapper::toUserDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDTOs);
+    }
+
 }

@@ -21,6 +21,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -274,5 +276,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> getAvailableUsersWithoutWorkSchedule(LocalDate workDay, LocalTime startTime, LocalTime endTime) {
+        return userRepository.findAvailablePTs(workDay, startTime, endTime);
     }
 }

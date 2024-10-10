@@ -3,6 +3,8 @@ package com.pvh.gym_management.services;
 import com.pvh.gym_management.dtos.*;
 import com.pvh.gym_management.pojo.User;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +22,5 @@ public interface UserService {
     void changePassword(int userId, ChangePasswordRequest request);
     List<UserDTO> getAllUsers();
     List<PTInfoDTO> getAllPTDetails();
+    List<User> getAvailableUsersWithoutWorkSchedule(LocalDate workDay, LocalTime startTime, LocalTime endTime);
 }
