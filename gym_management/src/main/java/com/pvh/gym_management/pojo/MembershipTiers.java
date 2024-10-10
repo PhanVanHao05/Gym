@@ -1,5 +1,6 @@
 package com.pvh.gym_management.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,9 @@ public class MembershipTiers {
     private String benefits;
     private double price;
 
+    private int duration;
+
     @OneToMany(mappedBy = "membershipTier")
+    @JsonIgnore
     private Collection<UserMemberships> userMemberships;
 }

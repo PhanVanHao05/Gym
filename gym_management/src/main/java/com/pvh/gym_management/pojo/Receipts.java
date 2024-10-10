@@ -29,6 +29,10 @@ public class Receipts {
     @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethods paymentMethod;
 
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private OnlinePaymentResult payment;
+
     @Column(name = "receipt_date")
     private Date receiptDate;
 

@@ -10,5 +10,6 @@ public interface WorkScheduleService {
     List<WorkSchedule> getWorkSchedulesByCustomerIdAndPtId(int customerId, int ptId);
     void deleteWorkSchedule(int id);
     List<WorkSchedule> getWorkSchedulesByPtId(int ptId);
+
 }
 

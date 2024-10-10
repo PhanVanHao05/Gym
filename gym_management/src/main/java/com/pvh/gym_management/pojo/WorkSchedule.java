@@ -19,18 +19,18 @@ public class WorkSchedule {
 
     @ManyToOne
     @JoinColumn(name = "pt_id", nullable = false)
-    private PTDetail pt;
+    private User pt;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
     @Column(name = "work_day")
-    private LocalDate workDay; // Ngày làm việc
+    private LocalDate workDay;
 
     @Column(name = "start_time")
-    private LocalTime startTime; // Thời gian bắt đầu
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private LocalTime endTime; // Thời gian kết thúc
+    private LocalTime endTime;
 }

@@ -1,16 +1,11 @@
 package com.pvh.gym_management.services.Impl;
 
-import com.pvh.gym_management.dtos.PTInfoDTO;
-import com.pvh.gym_management.mappers.PTInfoDTOMapper;
 import com.pvh.gym_management.pojo.PTDetail;
-import com.pvh.gym_management.pojo.User;
 import com.pvh.gym_management.repositories.PTDetailRepository;
-import com.pvh.gym_management.repositories.UserRepository;
 import com.pvh.gym_management.services.PTDetailService;
+import com.pvh.gym_management.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class PTDetailServiceImpl implements PTDetailService {
@@ -19,58 +14,33 @@ public class PTDetailServiceImpl implements PTDetailService {
     private PTDetailRepository ptDetailRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PTInfoDTOMapper ptInfoDTOMapper;
+    private UserService userService;
 
     @Override
-    public PTDetail createPTDetail(PTDetail ptDetail, int userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-
-        ptDetail.setUser(user);
-
+    public PTDetail createPTDetail(PTDetail ptDetail) {
         return ptDetailRepository.save(ptDetail);
     }
 
     @Override
-    public Optional<PTDetail> updatePTDetail(int userId, PTDetail ptDetailUpdates) {
-        Optional<PTDetail> existingPTDetailOpt = ptDetailRepository.findByUserId(userId);
+    public PTDetail updatePTDetail(int id, PTDetail ptDetail) {
+        PTDetail existingPTDetail = ptDetailRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PTDetail not found with id: " + id));
 
-        if (existingPTDetailOpt.isPresent()) {
-            PTDetail existingPTDetail = existingPTDetailOpt.get();
-            existingPTDetail.setSalary(ptDetailUpdates.getSalary());
+        existingPTDetail.setUser(ptDetail.getUser());
+        existingPTDetail.setSalary(ptDetail.getSalary());
 
-            ptDetailRepository.save(existingPTDetail);
-            return Optional.of(existingPTDetail);
-        } else {
-            return Optional.empty();
-        }
+        return ptDetailRepository.save(existingPTDetail);
     }
 
     @Override
-    public Optional<PTInfoDTO> getPTInfoById(int id) {
+    public PTDetail getPTDetailById(int id) {
         return ptDetailRepository.findById(id)
-                .map(ptInfoDTOMapper::toPTInfoDTO);
+                .orElseThrow(() -> new RuntimeException("PTDetail not found with id: " + id));
     }
 
     @Override
-    public Optional<PTInfoDTO> getPTInfoByUserId(int userId) {
+    public PTDetail getPTDetailByUserId(int userId) {
         return ptDetailRepository.findByUserId(userId)
-                .map(ptInfoDTOMapper::toPTInfoDTO);
+                .orElseThrow(() -> new RuntimeException("PTDetail not found for userId: " + userId));
     }
-
-    @Override
-    public Optional<PTDetail> updateSalary(int userId, double salary) {
-        Optional<PTDetail> ptDetailOptional = ptDetailRepository.findByUserId(userId);
-        if (ptDetailOptional.isPresent()) {
-            PTDetail ptDetail = ptDetailOptional.get();
-            ptDetail.setSalary(salary);
-            ptDetailRepository.save(ptDetail);
-            return Optional.of(ptDetail);
-        }
-        return Optional.empty();
-    }
-
 }

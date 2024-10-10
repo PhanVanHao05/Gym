@@ -22,6 +22,4 @@ public class PTDetail {
 
     private double salary;
 
-    @OneToMany(mappedBy = "pt")
-    private Collection<WorkSchedule> workSchedules;
 }

@@ -56,9 +56,11 @@ public class User implements UserDetails {
     private String avatar;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private PTDetail ptDetail;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private CustomerDetail customerDetail;
 
     @OneToMany(mappedBy = "customer")

@@ -1,9 +1,12 @@
 package com.pvh.gym_management.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import com.pvh.gym_management.enums.MembershipStatus;
+
 import java.util.Date;
 
 @Entity
@@ -18,6 +21,7 @@ public class UserMemberships {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @ManyToOne
@@ -30,5 +34,6 @@ public class UserMemberships {
     @Column(name = "end_date")
     private Date endDate;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private MembershipStatus status;
 }
